@@ -1,18 +1,18 @@
-# Exercise 5: Keyboard Navigation
+<!-- # Exercise 5: Keyboard Navigation
 
-Right now, our typeahead only works when using a mouse. This UI will not work for keyboard users, nor will it work for users who use a screen reader. It's important to make sure the stuff we build works well for users with disabilities.
+<!-- Right now, our typeahead only works when using a mouse. This UI will not work for keyboard users, nor will it work for users who use a screen reader. It's important to make sure the stuff we build works well for users with disabilities.
 
-Let's tackle keyboard navigation first.
+Let's tackle keyboard navigation first. -->
 
-The good news is, we get some of this for free. Browsers will fire the "onClick" event on buttons when you press "Enter" on them. Out of the box, we should be able to type a few letters, press "Tab" to move focus to the "Clear" button, and press "Enter" to clear the typed characters.
+<!-- The good news is, we get some of this for free. Browsers will fire the "onClick" event on buttons when you press "Enter" on them. Out of the box, we should be able to type a few letters, press "Tab" to move focus to the "Clear" button, and press "Enter" to clear the typed characters. -->
 
-What should the ideal behaviour be? You might think that we should use the "Tab" key to move between every suggestion in the list, but this actually isn't the best practice. Instead, we want the user to be able to use the _arrow keys_. When the user is focused on the input, to move between suggestions. This is the best practice because it means that users don't have to tab through _every single suggestion_ just to get on with their page navigation. For some users, keypresses are strenuous, so we should try and minimize them.
+<!-- What should the ideal behaviour be? You might think that we should use the "Tab" key to move between every suggestion in the list, but this actually isn't the best practice. Instead, we want the user to be able to use the _arrow keys_. When the user is focused on the input, to move between suggestions. This is the best practice because it means that users don't have to tab through _every single suggestion_ just to get on with their page navigation. For some users, keypresses are strenuous, so we should try and minimize them. -->
 
 Here's our ideal behaviour:
 
 ![keyboard-demo](../__lecture/assets/typeahead-keyboard-demo.gif)
 
-We're already listening for keypresses, since we're calling the handler when the user presses "enter". Let's also add handlers for the up and down arrows:
+<!-- We're already listening for keypresses, since we're calling the handler when the user presses "enter". Let's also add handlers for the up and down arrows: -->
 
 ```jsx
 <input
@@ -37,7 +37,7 @@ We're already listening for keypresses, since we're calling the handler when the
 />
 ```
 
-Right now, we don't really have a notion of which item is "selected"; we have a yellow hover state, but that's tracked in CSS.
+<!-- Right now, we don't really have a notion of which item is "selected"; we have a yellow hover state, but that's tracked in CSS. -->
 
 We can think of the currently-selected item as some data that changes over time. And for dynamic data, we use React state.
 
@@ -75,8 +75,10 @@ const Typeahead = (
       }}
     />
   );
-};
+}; -->
 ```
+
+///////////////////////////
 
 Earlier, we suggested adding a hover state to each list item. Let's remove that; instead, the yellow background will be managed through React, based on the currently-selected index.
 
