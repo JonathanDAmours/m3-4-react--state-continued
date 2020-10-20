@@ -4,7 +4,13 @@ import styled from "styled-components";
 
 const Typeahead = ({ suggestions, handleSelect, categories }) => {
   const [value, setValue] = useState("");
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  let matchingResults = suggestions.filter((book) => {
+    const lowerCasedInput = value.toLowerCase();
+    const lowerCasedTitle = book.title.toLowerCase();
+    const match = lowerCasedTitle.includes(lowerCasedInput);
+    return match && value.length >= 2;
+  });
 
   return (
     <Wrapper>
@@ -17,15 +23,21 @@ const Typeahead = ({ suggestions, handleSelect, categories }) => {
             switch (ev.key) {
               case "Enter": {
                 handleSelect(ev.target.value);
-                return;
+                break;
               }
               case "ArrowUp": {
-                setSelectedSuggestionIndex(selectedSuggestionIndex - 1);
-                return;
+                if (selectedIndex <= 0) {
+                  return;
+                }
+                setSelectedIndex(selectedIndex - 1);
+                break;
               }
               case "ArrowDown": {
-                setSelectedSuggestionIndex(selectedSuggestionIndex - 1);
-                return;
+                if (selectedIndex >= matchingResults.length - 1) {
+                  return;
+                }
+                setSelectedIndex(selectedIndex + 1);
+                break;
               }
             }
           }}
@@ -33,35 +45,35 @@ const Typeahead = ({ suggestions, handleSelect, categories }) => {
         <ClearButton onClick={() => setValue("")}>Clear</ClearButton>
       </SearchSection>
       <Box>
-        {suggestions
-          .filter((book) => {
-            if (
-              book.title.toLowerCase().includes(value.toLowerCase()) &&
-              value.length >= 2
-            ) {
-              return true;
-            }
-          })
-          .map((book) => {
-            const category = categories[book.categoryId].name;
-            const title = book.title.toLowerCase();
-            const searchTerm = value.toLowerCase();
-            const indexSlice = title.indexOf(searchTerm);
-            const valueIndex = value.length;
-            const slicing = valueIndex + indexSlice;
-            const firstPart = book.title.slice(0, slicing);
-            const secondPart = book.title.slice(slicing, title.length);
-            return (
-              <Suggestion onClick={() => handleSelect(book.title)}>
-                <First>{firstPart}</First>
-                <Second>{secondPart}</Second>
-                <Category>
-                  {" "}
-                  in <Purple>{category}</Purple>
-                </Category>
-              </Suggestion>
-            );
-          })}
+        {matchingResults.map((book, bookIndex) => {
+          const category = categories[book.categoryId].name;
+          const title = book.title.toLowerCase();
+          const searchTerm = value.toLowerCase();
+          const indexSlice = title.indexOf(searchTerm);
+          const valueIndex = value.length;
+          const slicing = valueIndex + indexSlice;
+          const firstPart = book.title.slice(0, slicing);
+          const secondPart = book.title.slice(slicing, title.length);
+          const isSelected = bookIndex === selectedIndex;
+          return (
+            <Suggestion
+              isSelected={isSelected}
+              style={{
+                background: isSelected
+                  ? "hsla(50deg, 100%, 80%, 0.25)"
+                  : "transparent",
+              }}
+              onClick={() => handleSelect(book.title)}
+            >
+              <First>{firstPart}</First>
+              <Second>{secondPart}</Second>
+              <Category>
+                {" "}
+                in <Purple>{category}</Purple>
+              </Category>
+            </Suggestion>
+          );
+        })}
       </Box>
     </Wrapper>
   );
@@ -89,7 +101,6 @@ const Suggestion = styled.li`
 
   &:hover {
     background-color: lightgoldenrodyellow;
-    font-weight: bold;
   }
 `;
 
